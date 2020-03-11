@@ -83,8 +83,8 @@
                 </div>
 
                 <div class="links">
-                    <a href="{{ route('companies') }}">Companies</a>
-                    <a href="{{ route('staff') }}">Staff</a>
+                    {{--<a href="{{ route('companies') }}">Companies</a>--}}
+                    {{--<a href="{{ route('staff') }}">Staff</a>--}}
                 </div>
             </div>
         </div>

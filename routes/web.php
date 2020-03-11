@@ -13,15 +13,3 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/companies', function () {
-    return view('welcome');
-})->name('companies');
-
-Route::get('/staff', function () {
-    return view('welcome');
-})->name('staff');
-
-//Auth::routes();
-
-//Route::get('/home', 'HomeController@index')->name('home');

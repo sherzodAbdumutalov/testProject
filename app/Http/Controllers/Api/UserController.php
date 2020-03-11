@@ -13,56 +13,46 @@ class UserController extends Controller
     public $successStatus = 200;
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'c_password' => 'required|same:password',
+        $this->validate($request, [
+            'name' => 'required|min:3',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
         ]);
 
-        if ($validator->fails()) {
-            $response = [
-                'success' => false,
-                'data' => 'Validation Error.',
-                'message' => $validator->errors()
-            ];
-            return response()->json($response, 404);
-        }
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password)
+        ]);
 
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] = $user->createToken('MyApp')->accessToken;
-        $success['name'] = $user->name;
+        $token = $user->createToken('TutsForWeb')->accessToken;
 
-        $response = [
-            'success' => true,
-            'data' => $success,
-            'message' => 'User register successfully.'
-        ];
-
-        return response()->json($response, 200);
+        return response()->json(['token' => $token], 200);
     }
 
     /**
      * Login api
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function login()
+    public function login(Request $request)
     {
-        if (Auth::attempt(['email' => request('email'), 'password' => request('password')])) {
-            $user = Auth::user();
-            $success['token'] = $user->createToken('MyApp')->accessToken;
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
 
-            return response()->json(['success' => $success], 200);
+        if (auth()->attempt($credentials)) {
+            $token = auth()->user()->createToken('TutsForWeb')->accessToken;
+            return response()->json(['token' => $token], 200);
         } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+            return response()->json(['error' => 'UnAuthorised'], 401);
         }
     }
 
-    public function getUser() {
-        $user = Auth::user();
-        return response()->json(['success' => $user], $this->successStatus);
+    public function details()
+    {
+        return response()->json(['user' => auth()->user()], 200);
     }
 }
