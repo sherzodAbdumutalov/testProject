@@ -55,4 +55,14 @@ class UserController extends Controller
     {
         return response()->json(['user' => auth()->user()], 200);
     }
+
+    public function logout(Request $request) {
+
+        $token = $request->user()->token();
+        $token->revoke();
+
+        $response = 'You have been succesfully logged out!';
+        return response($response, 200);
+
+    }
 }

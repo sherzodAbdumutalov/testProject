@@ -27,6 +27,14 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::routes();
+
+        Gate::define('VIEW_COMPANY', function ($user){
+            return $user->canDo('VIEW_COMPANY', true);
+        });
+
+        Gate::define('VIEW_STAFF', function ($user){
+            return $user->canDo('VIEW_STAFF', true);
+        });
         //
     }
 }

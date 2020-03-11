@@ -18,5 +18,7 @@ Route::post('register', 'Api\UserController@register');
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'Api\UserController@details');
 
-    Route::resource('companies', 'Api\UserController');
+    Route::resource('companies', 'Api\CompanyController');
+    Route::get('/logout', 'Api\UserController@logout')->name('logout');
+
 });

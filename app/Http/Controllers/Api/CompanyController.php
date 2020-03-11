@@ -10,11 +10,14 @@ class CompanyController extends Controller
 {
     public function index()
     {
-        $products = auth()->user()->products;
+        if (Gate::denies('VIEW_COMPANY')){
+            abort('404');
+        }
+        $company = Company::all()->toArray();
 
         return response()->json([
             'success' => true,
-            'data' => $products
+            'data' => $company
         ]);
     }
 
